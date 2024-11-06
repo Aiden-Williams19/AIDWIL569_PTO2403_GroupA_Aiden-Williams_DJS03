@@ -1,3 +1,68 @@
+// Define the BookPreview component
+class BookPreview extends HTMLElement {
+    constructor() {
+        super();
+        const shadow = this.attachShadow({ mode: 'open' });
+
+        // Component template
+        shadow.innerHTML = `
+            <style>
+                .preview {
+                    display: flex;
+                    align-items: center;
+                    cursor: pointer;
+                    border: none;
+                    background-color: transparent;
+                }
+                .preview__image {
+                    width: 100px;
+                    height: 150px;
+                    margin-right: 10px;
+                    object-fit: cover;
+                }
+                .preview__info {
+                    display: flex;
+                    flex-direction: column;
+                }
+                .preview__title {
+                    font-size: 1.2em;
+                    margin: 0;
+                }
+                .preview__author {
+                    font-size: 0.9em;
+                    color: gray;
+                }
+            </style>
+            <button class="preview">
+                <img class="preview__image" src="" alt="Book cover" />
+                <div class="preview__info">
+                    <h3 class="preview__title"></h3>
+                    <div class="preview__author"></div>
+                </div>
+            </button>
+        `;
+    }
+
+    static get observedAttributes() {
+        return ['author', 'image', 'title'];
+    }
+
+    attributeChangedCallback(name, oldValue, newValue) {
+        const shadow = this.shadowRoot;
+        if (name === 'image') {
+            shadow.querySelector('.preview__image').src = newValue;
+        } else if (name === 'title') {
+            shadow.querySelector('.preview__title').textContent = newValue;
+        } else if (name === 'author') {
+            shadow.querySelector('.preview__author').textContent = newValue;
+        }
+    }
+}
+
+// Define the custom element
+customElements.define('book-preview', BookPreview);
+
+
 import { books, authors, genres, BOOKS_PER_PAGE } from './data.js';
 
 // State variables for pagination and search results
